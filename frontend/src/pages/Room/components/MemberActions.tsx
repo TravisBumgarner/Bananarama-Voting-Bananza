@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { Button, Heading, Modal, Paragraph } from 'sharedComponents'
 
 import styled from 'styled-components'
@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { context } from 'context'
 
 import { snippets } from 'theme'
-import { useDragAndDrop } from 'hooks'
 import { AddDemoModal } from '../../../modals'
 
 const MemberActionsWrapper = styled.div`
@@ -22,26 +21,15 @@ const VotingBananaWrapper = styled.div<{ disabled: boolean }>`
   cursor: ${({ disabled }) => (disabled ? ' not-allowed' : ' grab')};
   font-size: 40px;
 `
-const VotingBanana = ({ bananaIndex, canBeUsed }: { bananaIndex: number, canBeUsed: boolean }) => {
-    const { dragStartCallback, dropCallback, matchedItemIndex, matchedBinIndex } = useDragAndDrop()
-    const [hasBeenBinned, setHasBeenBinned] = useState(!canBeUsed)
-
-    useEffect(() => {
-        if (matchedItemIndex === bananaIndex && matchedBinIndex !== null) {
-            setHasBeenBinned(true)
-        }
-    }, [matchedItemIndex])
-
-    const onDragEnd = () => {
-        dropCallback()
-    }
+const VotingBanana = ({ canBeUsed }: { canBeUsed: boolean }) => {
+    // const [hasBeenBinned, setHasBeenBinned] = useState(!canBeUsed)
 
     return (
         <VotingBananaWrapper
-            disabled={hasBeenBinned}
-            onDragStart={() => dragStartCallback(bananaIndex)}
-            draggable={!hasBeenBinned}
-            onDragEnd={onDragEnd}
+            disabled={canBeUsed}
+        // onDragStart={() => dragStartCallback(bananaIndex)}
+        // draggable={!hasBeenBinned}
+        // onDragEnd={onDragEnd}
         >🍌
         </VotingBananaWrapper>
     )
@@ -52,10 +40,6 @@ const MemberActions = () => {
     const [showAddDemoModal, setShowAddDemoModal] = useState(false)
     if (!room || !user) return null
 
-    const voteRemaining = useMemo(() => {
-        const votesCast = Object.values(room.votes).filter(({ userId }) => userId === user.id).length
-        return room.maxVotes - votesCast
-    }, [room.votes.length, room.maxVotes])
     let content
     if (room.status === 'signup') {
         content = (
@@ -81,12 +65,7 @@ const MemberActions = () => {
     if (room.status === 'voting') {
         content = (
             <div>
-                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
-                    {[...Array(room.maxVotes)].map((_, index) => {
-                        return <VotingBanana canBeUsed={index < voteRemaining} key={index} bananaIndex={index} /> //eslint-disable-line
-                    })}
-                </div>
-                <Paragraph align="center">Drag bananas to your favorite demos to vote!</Paragraph>
+                Nothing.
             </div>
         )
     }

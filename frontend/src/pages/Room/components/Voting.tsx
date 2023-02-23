@@ -2,11 +2,10 @@ import { ApolloError, gql, useMutation, useSubscription } from '@apollo/client'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Heading, Paragraph, RoomWrapper } from 'sharedComponents'
+import { Button, Heading, Paragraph, RoomWrapper } from 'sharedComponents'
 import { context } from 'context'
 import { TDemo, TRoom, TUser, TVote } from 'types'
 import { logger } from 'utilities'
-import { useDragAndDrop } from 'hooks'
 import DemoWrapper from './DemoWrapper'
 
 const VOTE_SUBSCRIPTION = gql`
@@ -60,11 +59,6 @@ const VoteCast = ({ vote }: { vote: TVote }) => {
     })
 
     const deleteVote = useCallback(async () => {
-        console.log({
-            voteId: vote.id,
-            userId: vote.userId,
-            roomId: vote.roomId
-        })
         await deleteVoteMutation({
             variables: {
                 voteId: vote.id,
@@ -100,16 +94,12 @@ const VoteCast = ({ vote }: { vote: TVote }) => {
 
 type DemoProps = {
     demo: TDemo
-    // isCastingVote: boolean
-    // setIsCastingVote: React.Dispatch<React.SetStateAction<boolean>>
-    // canVote: boolean
-    binIndex: number
+    canVote: boolean
     user: TUser
     room: TRoom
 }
-const Demo = ({ demo, binIndex, user, room }: DemoProps) => {
+const Demo = ({ demo, user, room, canVote }: DemoProps) => {
     const { dispatch } = useContext(context)
-    const { matchedBinIndex, dragEnterCallback, hoveredBinIndex } = useDragAndDrop()
     const [votesCast, setVotesCast] = useState<TVote[]>([])
 
     const onAddVoteSuccess = useCallback(() => {
@@ -118,7 +108,6 @@ const Demo = ({ demo, binIndex, user, room }: DemoProps) => {
 
     const onAddVoteFailure = useCallback((error: ApolloError) => {
         dispatch({ type: 'ADD_MESSAGE', data: { message: error.message } })
-        // setIsCastingVote(false)
     }, [])
     const [addVoteMutation] = useMutation<any>(ADD_VOTE_MUTATION, {
         onCompleted: onAddVoteSuccess,
@@ -137,33 +126,20 @@ const Demo = ({ demo, binIndex, user, room }: DemoProps) => {
     }, [])
 
     useEffect(() => {
-        if (matchedBinIndex === binIndex) {
-            addVote()
-        }
-    }, [matchedBinIndex])
-
-    // isHovered Currently doesn't work.
-    const isHovered = useMemo(() => hoveredBinIndex === binIndex, [hoveredBinIndex, binIndex])
-    const onDragEnter = useCallback(() => dragEnterCallback(binIndex), [binIndex])
-
-    useEffect(() => {
         setVotesCast(Object.values(room.votes).filter(({ userId, demoId }) => userId === user.id && demoId === demo.id))
     }, [Object.values(room.votes).length])
 
     const VotesCast = votesCast.map((vote) => <VoteCast key={vote.id} vote={vote} />)
 
     return (
-        <DemoWrapper
-            isHovered={isHovered}
-            onDragEnter={onDragEnter}
-        // onDragLeave={dragLeaveCallback} currently doesn't work
-        >
+        <DemoWrapper>
             <div>
                 <Heading.H3>{demo.demo}</Heading.H3>
                 <Paragraph>{demo.presenter}</Paragraph>
             </div>
             <div style={{ fontSize: '3rem' }}>
                 {VotesCast}
+                <Button disabled={!canVote} type="button" label="Cast Vote" onClick={addVote} icon="done_all" variation="rotten" />
             </div>
         </DemoWrapper>
     )
@@ -196,16 +172,21 @@ const Voting = ({ room, user }: { room: TRoom, user: TUser }) => {
         },
     })
 
+    const voteRemaining = useMemo(() => {
+        const votesCast = Object.values(room.votes).filter(({ userId }) => userId === user.id).length
+        return room.maxVotes - votesCast
+    }, [room.votes.length, room.maxVotes])
+
     return (
         <RoomWrapper>
             <Heading.H2>Voting</Heading.H2>
 
             <DemosWrapper>
-                {Object.values(room.demos).map((demo, index) => (
+                {Object.values(room.demos).map((demo) => (
                     <Demo
+                        canVote={voteRemaining > 0}
                         demo={demo}
                         key={demo.id}
-                        binIndex={index}
                         user={user}
                         room={room}
                     />

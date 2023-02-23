@@ -11,7 +11,6 @@ import { context, Context } from 'context'
 import { AlertMessage, PageHeader, Router } from './components'
 import { JoinModal } from './modals'
 import Modal from './sharedComponents/Modal'
-import { VotingContext } from './hooks/useDragAndDrop'
 
 const AppWrapper = styled.div`
     min-width: 80vw;
@@ -75,14 +74,12 @@ const App = () => {
 const ContextWrapper = () => (
     <BrowserRouter>
         <ApolloProvider client={apolloClient}>
-            <VotingContext>
-                <Context>
-                    <>
-                        <GlobalStyle />
-                        <App />
-                    </>
-                </Context>
-            </VotingContext>
+            <Context>
+                <>
+                    <GlobalStyle />
+                    <App />
+                </>
+            </Context>
         </ApolloProvider>
     </BrowserRouter>
 )
