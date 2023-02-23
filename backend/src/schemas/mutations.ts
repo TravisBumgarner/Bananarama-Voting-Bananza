@@ -216,7 +216,6 @@ const deleteVote = {
         voteId: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (_, args: DeleteVoteArgs) => {
-        console.log('args', args)
         const deleteVoteResult = inMemoryDatastore.deleteVote(args.roomId, args.userId, args.voteId)
         if (deleteVoteResult.success) {
             // await publishEvent({

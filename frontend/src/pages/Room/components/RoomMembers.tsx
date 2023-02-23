@@ -47,9 +47,6 @@ const DefaultMembers = ({ members }: { members: TRoom['members'] }) => {
     )
 }
 
-const VotingBananaWrapper = styled.span<{ wasUsed: boolean }>`
-  filter: grayscale(${({ wasUsed }) => (wasUsed ? 1 : 0)});
-`
 const VotingMembers = ({ members, votes, maxVotes }: TRoom) => {
     const votesCastByUser = useMemo(() => {
         const votesCounter: Record<string, number> = {}
@@ -68,12 +65,9 @@ const VotingMembers = ({ members, votes, maxVotes }: TRoom) => {
                         : -1
                 })
                 .map(({ id, name }) => {
-                    const votesRemaining = maxVotes - votesCastByUser[id]
-
                     return (
                         <ListItem key={id}>
-                            {name} <VotingBananaWrapper wasUsed>{'🍌'.repeat(votesCastByUser[id])}</VotingBananaWrapper>
-                            <VotingBananaWrapper wasUsed={false}>{'🍌'.repeat(votesRemaining)}</VotingBananaWrapper>
+                            {name} {votesCastByUser[id] > 0 ? '✅' : '⏲'}
                         </ListItem>
                     )
                 })}
