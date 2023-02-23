@@ -3,9 +3,8 @@
     "author": "Travis Bumgarner",
     "version": "1.0.0",
     "scripts": {
-        "sd": "export NODE_ENV=local && ts-node-dev ./src/index.ts --ignore-watch node_modules",
+        "start": "export NODE_ENV=local && ts-node-dev ./src/index.ts --ignore-watch node_modules",
         "bundle": "rm -rf ./build && tsc",
-        "start": "node build/index.js",
         "deploy": "gcloud config set project root-270023 && gcloud builds submit --tag gcr.io/root-270023/bananarama-be && gcloud run deploy bananarama-be --image gcr.io/root-270023/bananarama-be --platform managed --region us-east1",
         "lint:run": "npx eslint --ext .ts ./src/**",
         "lint:fix": "npx eslint --ext .ts ./src/** --fix",

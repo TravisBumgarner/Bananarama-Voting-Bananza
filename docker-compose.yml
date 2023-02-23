@@ -9,7 +9,7 @@ services:
     ports:
       - 3000:3000
     working_dir: /app/frontend
-    command: [ "yarn", "run", "sd" ]
+    command: [ "yarn", "run", "start" ]
   backend:
     container_name: bananarama-voting-bananza-backend
     image: mhart/alpine-node:16
@@ -18,6 +18,6 @@ services:
     ports:
       - 8080:8080
     working_dir: /app/backend
-    command: [ "yarn", "run", "sd" ]
+    command: [ "yarn", "run", "start" ]
     environment:
       - NODE_ENV=local

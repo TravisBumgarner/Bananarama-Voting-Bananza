@@ -11,4 +11,4 @@ RUN yarn run bundle
 
 EXPOSE 8080
 
-CMD ["yarn", "run", "start"]
+CMD ["node", "build/index.js"]

@@ -47,7 +47,7 @@
         "webpack-dev-server": "^3.11.3"
     },
     "scripts": {
-        "sd": "export NODE_ENV=local && webpack serve --config=webpack.js",
+        "start": "export NODE_ENV=local && webpack serve --config=webpack.js",
         "bundle": "export NODE_ENV=production && rm -rf ./public; mkdir ./public; webpack --config=webpack.js",
         "test-unit": "jest --config=jest.unit.js",
         "precommit": "yarn run test-unit",

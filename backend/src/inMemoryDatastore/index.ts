@@ -137,6 +137,32 @@ class InMemoryDatastore {
             error: EErrorMessages.RoomDoesNotExist
         }
     }
+
+    deleteVote(roomId: string, userId: string, voteId: string): Response<TVote['id']> {
+        if (roomId in this.rooms) {
+            const voteToDeleteIndex = this.rooms[roomId].votes.findIndex(({ id }) => id === voteId)
+            if (voteToDeleteIndex !== -1 && userId === this.rooms[roomId].votes[voteToDeleteIndex].userId) {
+                const modifiedVotes = [
+                    ...this.rooms[roomId].votes.slice(0, voteToDeleteIndex),
+                    ...this.rooms[roomId].votes.slice(voteToDeleteIndex + 1,)
+                ]
+                this.rooms[roomId].votes = modifiedVotes
+
+                return {
+                    success: true,
+                    data: voteId
+                }
+            }
+            return {
+                success: false,
+                error: EErrorMessages.VoteDoesNotExist
+            }
+        }
+        return {
+            success: false,
+            error: EErrorMessages.RoomDoesNotExist
+        }
+    }
 }
 
 const inMemoryDatastore = new InMemoryDatastore()

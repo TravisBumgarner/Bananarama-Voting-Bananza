@@ -181,7 +181,7 @@ type AddVoteArgs = {
 
 const addVote = {
     type: VoteType,
-    description: 'Create a Vote',
+    description: 'Add a Vote',
     args: {
         roomId: { type: new GraphQLNonNull(GraphQLString) },
         userId: { type: new GraphQLNonNull(GraphQLString) },
@@ -200,6 +200,36 @@ const addVote = {
     },
 }
 
+type DeleteVoteArgs = {
+    id: string
+    roomId: string
+    userId: string
+    voteId: string
+}
+
+const deleteVote = {
+    type: VoteType,
+    description: 'Delete a Vote',
+    args: {
+        roomId: { type: new GraphQLNonNull(GraphQLString) },
+        userId: { type: new GraphQLNonNull(GraphQLString) },
+        voteId: { type: new GraphQLNonNull(GraphQLString) },
+    },
+    resolve: async (_, args: DeleteVoteArgs) => {
+        const deleteVoteResult = inMemoryDatastore.deleteVote(args.roomId, args.userId, args.voteId)
+        if (deleteVoteResult.success) {
+            // await publishEvent({
+            //     type: EPubSubActionType.ADD_VOTE_ACTION,
+            //     data: { ...deleteVoteResult.data, roomId: args.roomId }
+            // })
+            return {
+                id: deleteVoteResult.data
+            }
+        }
+        throw new Error(deleteVoteResult.error)
+    },
+}
+
 const RootMutationType = new GraphQLObjectType({
     name: 'Mutation',
     description: 'Root Mutation',
@@ -209,7 +239,8 @@ const RootMutationType = new GraphQLObjectType({
         updateRoom,
         addDemo,
         addVote,
-        deleteRoom
+        deleteRoom,
+        deleteVote
     })
 })
 

@@ -5,7 +5,7 @@
     "main": "index.js",
     "private": true,
     "scripts": {
-        "sd": "docker-compose up",
+        "start": "docker-compose up",
         "deploy": "concurrently -n frontend,backend -c \"bgMagenta.bold,bgCyan.bold\" \"cd frontend && yarn run deploy\" \"cd backend && yarn run deploy\"",
         "bootstrap": "cd backend && yarn && cd ../frontend && yarn && cd .. && yarn",
         "lint:run": "cd backend && yarn run lint:run && cd ../frontend && yarn run lint:run",

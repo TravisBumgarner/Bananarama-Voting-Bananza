@@ -29,6 +29,7 @@ type TRoom = {
 
 enum EErrorMessages {
     RoomDoesNotExist = 'RoomDoesNotExist',
+    VoteDoesNotExist = 'VoteDoesNotExist',
     MemberAlreadyExists = 'MemberAlreadyExists',
     MemberIsNotRoomOwner = 'MemberIsNotRoomOwner'
 }

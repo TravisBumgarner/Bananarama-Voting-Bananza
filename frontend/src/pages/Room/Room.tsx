@@ -8,7 +8,6 @@ import { arrayToObject, logger, sanitizeRoomId } from 'utilities'
 import { context } from 'context'
 import { TDemo, TRoom, TRoomMember, TRoomMemberChange, TVote } from '../../types'
 import { Conclusion, RoomMembers, Signup, Voting, Admin } from './components'
-import MemberActions from './components/MemberActions'
 
 const Sidebar = styled.div`
     width: 190px;
@@ -41,7 +40,8 @@ const JOIN_ROOM_MUTATION = gql`
             votes {
                 userId
                 demoId
-                id
+                id,
+                roomId
             }
         }
     }
@@ -91,8 +91,6 @@ const Room = () => {
     const [isLoading, setIsLoading] = useState(true)
     const { dispatch, state } = useContext(context)
     const navigate = useNavigate()
-    // const [isSplashing, setIsSplashing] = useState(true)
-    // const splashTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
     const onJoinRoomSuccess = useCallback(({ joinRoom }: { joinRoom: TRoomGraphQL }) => {
         const { votes, members, demos, ...rest } = joinRoom
@@ -181,12 +179,6 @@ const Room = () => {
         })
     }, [sanitizeRoomId, state.user])
 
-    // useEffect(() => {
-    //     if (!state.room) return
-    //     if (state.room.status === 'voting' || state.room.status === 'conclusion') setIsSplashing(true)
-    //     splashTimeoutRef.current = setTimeout(() => setIsSplashing(false), 1)
-    // }, [state.room && state.room.status])
-
     const Content = useMemo(() => {
         if (!state.room || !state.user) return
 
@@ -217,17 +209,9 @@ const Room = () => {
         return null
     }
 
-    // if (state.room.status === 'voting' && isSplashing) {
-    //     return <VotingSplash room={state.room} />
-    // }
-
-    // if (state.room.status === 'conclusion' && isSplashing) {
-    //     return <ConclusionSplash />
-    // }
     return (
         <Wrapper>
             <Sidebar>
-                <MemberActions />
                 <RoomMembers />
                 <Admin room={state.room} user={state.user} />
             </Sidebar>
