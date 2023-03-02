@@ -73,9 +73,9 @@ const Demo = ({ demo, canVote, toggleVote, userHasVotedFor }: DemoProps) => {
 const Voting = ({ room, user }: { room: TRoom, user: TUser }) => {
     const { dispatch } = useContext(context)
     const [votesCast, setVotesCast] = useState<string[]>([])
+    const [isVoting, setIsVoting] = useState(false)
 
     const onAddVoteSuccess = useCallback(() => {
-        // setIsCastingVote(false)
     }, [])
 
     const onAddVoteFailure = useCallback((error: ApolloError) => {
@@ -112,14 +112,14 @@ const Voting = ({ room, user }: { room: TRoom, user: TUser }) => {
         },
     })
 
-    const voteRemaining = useMemo(() => {
+    const votesRemaining = useMemo(() => {
         return room.maxVotes - votesCast.length
     }, [votesCast, room.maxVotes])
 
     const hasUserAlreadyVoted = useMemo(() => {
-        // Check on page load to see if user has cast votes already.s
+        // Check on page load to see if user has cast votes already.
         return Object.values(room.votes).filter(({ userId }) => userId === user.id).length > 0
-    }, [])
+    }, [room.votes])
 
     const toggleVote = (demoId: string) => {
         const demoIndex = votesCast.indexOf(demoId)
@@ -134,26 +134,28 @@ const Voting = ({ room, user }: { room: TRoom, user: TUser }) => {
     }
 
     const submitVotes = useCallback(async () => {
-        votesCast.forEach((demoId) => {
+        setIsVoting(true)
+        await Promise.all(votesCast.map((demoId) => {
             // This can be refactored
-            addVoteMutation({
+            return addVoteMutation({
                 variables: {
                     userId: user.id,
                     roomId: room.id,
                     demoId
                 }
             })
-        })
+        }))
+        setIsVoting(false)
     }, [votesCast])
 
     return (
         <RoomWrapper>
-            <Heading.H2>Voting</Heading.H2>
+            <Heading.H2>Voting (Cast {votesRemaining} Vote{votesRemaining !== 1 ? 's' : ''})</Heading.H2>
 
             <DemosWrapper>
                 {Object.values(room.demos).map((demo) => (
                     <Demo
-                        canVote={!hasUserAlreadyVoted && voteRemaining > 0}
+                        canVote={!hasUserAlreadyVoted && votesRemaining > 0}
                         demo={demo}
                         key={demo.id}
                         userHasVotedFor={votesCast.indexOf(demo.id) > -1}
@@ -168,7 +170,7 @@ const Voting = ({ room, user }: { room: TRoom, user: TUser }) => {
                     variation="rotten"
                     label="Submit Votes"
                     icon="add"
-                    disabled={votesCast.length === 0 || hasUserAlreadyVoted}
+                    disabled={votesCast.length === 0 || hasUserAlreadyVoted || isVoting}
                     onClick={submitVotes}
                 />
             </div>

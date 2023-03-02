@@ -13,7 +13,7 @@ const logger = (message: any) => {
 const sanitizeRoomId = (dangerousString: string) => {
     const re = /[^a-z0-9-]/gi
     const cleanString = dangerousString.replace(re, '')
-    return cleanString
+    return cleanString.toLowerCase()
 }
 
 const getLocalStorage = (key: string) => {

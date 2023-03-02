@@ -93,7 +93,7 @@ const Signup = ({ room }: { room: TRoom }) => {
             <Modal
                 showModal={showAddDemoModal}
                 closeModal={() => setShowAddDemoModal(false)}
-                contentLabel="Add Demo!"
+                contentLabel="Add Demo"
             >
                 <AddDemoModal room={room} user={user} closeModal={() => setShowAddDemoModal(false)} />
             </Modal>

@@ -92,6 +92,12 @@ const Room = () => {
     const { dispatch, state } = useContext(context)
     const navigate = useNavigate()
 
+    useEffect(() => {
+        if (roomId !== roomId?.toLowerCase()) {
+            navigate(`/${roomId?.toLowerCase()}`)
+        }
+    }, [roomId])
+
     const onJoinRoomSuccess = useCallback(({ joinRoom }: { joinRoom: TRoomGraphQL }) => {
         const { votes, members, demos, ...rest } = joinRoom
         const mappedData = {
@@ -174,7 +180,7 @@ const Room = () => {
             variables: {
                 userName: state.user.name,
                 userId: state.user.id,
-                roomId
+                roomId: roomId ? sanitizeRoomId(roomId) : undefined
             }
         })
     }, [sanitizeRoomId, state.user])

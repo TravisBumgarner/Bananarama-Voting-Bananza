@@ -24,7 +24,7 @@ const Header = () => {
         <Wrapper>
             <Link style={{ textDecoration: 'none' }} to="/">
                 <Heading.H1>
-                    Bananarama Voting Bananza!
+                    Bananarama
                 </Heading.H1>
             </Link>
         </Wrapper>

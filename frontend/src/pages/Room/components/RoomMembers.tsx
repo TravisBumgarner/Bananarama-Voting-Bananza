@@ -1,10 +1,11 @@
 import { useCallback, useContext, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { Button, Heading, Paragraph } from 'sharedComponents'
+import { Button, Heading, Icon, Paragraph } from 'sharedComponents'
 import { context } from 'context'
 import { colors, snippets } from 'theme'
 import { TRoom } from 'types'
+import { sanitizeRoomId } from 'utilities'
 
 const ListItem = styled.li`
     list-style: none;
@@ -12,6 +13,13 @@ const ListItem = styled.li`
     margin: 0;
     padding: 0;
     font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    span {
+        margin-left: 0.5rem;
+    }
 `
 
 const List = styled.ul`
@@ -67,7 +75,7 @@ const VotingMembers = ({ members, votes, maxVotes }: TRoom) => {
                 .map(({ id, name }) => {
                     return (
                         <ListItem key={id}>
-                            {name} {votesCastByUser[id] > 0 ? '✅' : '⏲'}
+                            {name}  {votesCastByUser[id] > 0 ? <Icon name="done_all" /> : ''}
                         </ListItem>
                     )
                 })}
@@ -116,7 +124,7 @@ const RoomMembers = () => {
                 variation="rotten"
                 onClick={copyRoomToClipboard}
             />
-            <Paragraph align="center">Room Code: {window.location.pathname.replace('/', '')}</Paragraph>
+            <Paragraph align="center">Room Code: {sanitizeRoomId(window.location.pathname.replace('/', ''))}</Paragraph>
         </RoomMembersWrapper>
     )
 }

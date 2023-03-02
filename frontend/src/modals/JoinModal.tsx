@@ -45,7 +45,7 @@ const JoinModal = ({ closeModal }: JoinModalProps) => {
                     <Button
                         disabled={name.length === 0 || isLoading}
                         fullWidth
-                        label="Let the Voting Commence!"
+                        label="Enter"
                         icon="rocket_launch"
                         key="submit"
                         type="submit"

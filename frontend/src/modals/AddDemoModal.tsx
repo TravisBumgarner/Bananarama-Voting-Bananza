@@ -88,8 +88,7 @@ const AddDemo = ({ closeModal, room, user }: AddDemoProps) => {
                             key="submit"
                             type="submit"
                             variation="rotten"
-                            // icon="done_all"
-                            label="Submit Demo!"
+                            label="Submit Demo"
                         />
                     </ButtonWrapper>
                 </form>

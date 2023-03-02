@@ -1,4 +1,4 @@
-import { useContext, useCallback, useState } from 'react'
+import { useContext, useCallback, useState, useMemo } from 'react'
 import { Button, Heading, Paragraph } from 'sharedComponents'
 import { ApolloError, gql, useMutation } from '@apollo/client'
 
@@ -24,7 +24,7 @@ const UPDATE_ROOM_MUTATION = gql`
 `
 
 const Admin = ({ room, user }: { room: TRoom, user: TUser }) => {
-    const { dispatch } = useContext(context)
+    const { dispatch, state } = useContext(context)
     const [maxVotes, setMaxVotes] = useState(2)
 
     if (!room || !user || room.ownerId !== user.id) return null
@@ -47,7 +47,6 @@ const Admin = ({ room, user }: { room: TRoom, user: TUser }) => {
 
     const handleRoomChange = useCallback((status: TRoom['status']) => {
         if (!room) return
-
         const variables = {
             status,
             userId: user.id,
@@ -69,6 +68,12 @@ const Admin = ({ room, user }: { room: TRoom, user: TUser }) => {
         })
         navigator.clipboard.writeText(message)
     }
+
+    const hasDemos = useMemo(() => {
+        if (!state.room) return false
+
+        return Object.keys(state.room.demos).length > 0
+    }, [state.room?.demos])
 
     let content
     if (room.status === 'signup') {
@@ -98,6 +103,7 @@ const Admin = ({ room, user }: { room: TRoom, user: TUser }) => {
                     icon="how_to_vote"
                     variation="rotten"
                     label="Start Voting"
+                    disabled={!hasDemos}
                     onClick={() => handleRoomChange('voting')}
                 />
             </>
