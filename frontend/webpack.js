@@ -78,7 +78,7 @@ const webpackConfig = {
         new webpack.DefinePlugin(envVariables),
         new HtmlWebpackPlugin({
             template: './src/static/index.template.ejs',
-            favicon: './src/static/favicon.ico',
+            favicon: './src/static/favicon.png',
             inject: 'body',
         }),
     ],
