@@ -5,7 +5,6 @@ import { Button, Heading, Icon, Paragraph } from 'sharedComponents'
 import { context } from 'context'
 import { colors, snippets } from 'theme'
 import { TRoom } from 'types'
-import { sanitizeRoomId } from 'utilities'
 
 const ListItem = styled.li`
     list-style: none;
@@ -109,7 +108,7 @@ const RoomMembers = () => {
 
     const copyRoomToClipboard = useCallback(() => {
         dispatch({ type: 'ADD_MESSAGE', data: { message: 'Room URL copied to clipboard.' } })
-        navigator.clipboard.writeText(window.location.href)
+        navigator.clipboard.writeText(`${window.location.href}`)
     }, [window.location.href])
 
     return (
@@ -124,7 +123,7 @@ const RoomMembers = () => {
                 variation="rotten"
                 onClick={copyRoomToClipboard}
             />
-            <Paragraph align="center">Room Code: {sanitizeRoomId(window.location.pathname.replace('/', ''))}</Paragraph>
+            <Paragraph align="center">Room Code: {room?.id}</Paragraph>
         </RoomMembersWrapper>
     )
 }

@@ -1,12 +1,12 @@
 import { Loading } from 'sharedComponents'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useMemo, useContext, useState, useCallback, useEffect } from 'react'
 import { ApolloError, gql, useMutation, useSubscription, } from '@apollo/client'
 import styled from 'styled-components'
 
 import { arrayToObject, logger, sanitizeRoomId } from 'utilities'
 import { context } from 'context'
-import { TDemo, TRoom, TRoomMember, TRoomMemberChange, TVote } from '../../types'
+import { TDemo, TRoom, TRoomMember, TRoomMemberChange, TVote } from '../types'
 import { Conclusion, RoomMembers, Signup, Voting, Admin } from './components'
 
 const Sidebar = styled.div`
@@ -87,16 +87,9 @@ type TRoomGraphQL = {
 }
 
 const Room = () => {
-    const { roomId } = useParams()
     const [isLoading, setIsLoading] = useState(true)
     const { dispatch, state } = useContext(context)
     const navigate = useNavigate()
-
-    useEffect(() => {
-        if (roomId !== roomId?.toLowerCase()) {
-            navigate(`/${roomId?.toLowerCase()}`)
-        }
-    }, [roomId])
 
     const onJoinRoomSuccess = useCallback(({ joinRoom }: { joinRoom: TRoomGraphQL }) => {
         const { votes, members, demos, ...rest } = joinRoom
@@ -116,8 +109,7 @@ const Room = () => {
     const onJoinRoomFailure = useCallback((error: ApolloError) => {
         dispatch({ type: 'ADD_MESSAGE', data: { message: error.message } })
         logger(error.message)
-        setIsLoading(false)
-        navigate('/')
+        dispatch({ type: 'REMOVE_ROOM_ID' })
     }, [])
     const [joinRoomMutation] = useMutation<any>(JOIN_ROOM_MUTATION, {
         onCompleted: onJoinRoomSuccess,
@@ -126,7 +118,7 @@ const Room = () => {
 
     useSubscription<{ member: TRoomMemberChange }>(MEMBER_SUBSCRIPTION, {
         variables: {
-            roomId
+            roomId: state.roomId
         },
         onError: (error) => {
             logger(error)
@@ -151,7 +143,7 @@ const Room = () => {
 
     useSubscription<{ room: TRoom }>(ROOM_SUBSCRIPTION, {
         variables: {
-            roomId
+            roomId: state.roomId
         },
         onError: (error) => {
             logger(error)
@@ -180,7 +172,7 @@ const Room = () => {
             variables: {
                 userName: state.user.name,
                 userId: state.user.id,
-                roomId: roomId ? sanitizeRoomId(roomId) : undefined
+                roomId: state.roomId ? sanitizeRoomId(state.roomId) : undefined
             }
         })
     }, [sanitizeRoomId, state.user])

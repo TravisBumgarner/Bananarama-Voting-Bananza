@@ -37,9 +37,6 @@
       "context": [
         "src/Context/"
       ],
-      "modals": [
-        "src/modals/"
-      ],
       "hooks": [
         "src/hooks/"
       ],

@@ -8,9 +8,9 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 
 import { GlobalStyle } from 'theme'
 import { context, Context } from 'context'
-import { AlertMessage, PageHeader, Router } from './components'
-import { JoinModal } from './modals'
-import Modal from './sharedComponents/Modal'
+import { AlertMessage, PageHeader } from './components'
+import Lobby from './Lobby'
+import Room from './Room'
 
 const AppWrapper = styled.div`
     min-width: 80vw;
@@ -54,20 +54,11 @@ const App = () => {
     }, [showJoinModal, state.user])
 
     return (
-        <>
-            <AppWrapper>
-                <PageHeader />
-                <AlertMessage />
-                <Router />
-            </AppWrapper>
-            <Modal
-                showModal={showJoinModal}
-                closeModal={() => setShowJoinModal(false)}
-                contentLabel="Welcome!"
-            >
-                <JoinModal closeModal={() => setShowJoinModal(false)} />
-            </Modal>
-        </>
+        <AppWrapper>
+            <PageHeader />
+            <AlertMessage />
+            {state.roomId ? <Room /> : <Lobby />}
+        </AppWrapper>
     )
 }
 

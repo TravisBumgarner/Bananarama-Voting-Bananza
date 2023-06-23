@@ -13,6 +13,7 @@ type State = {
         id: string
     } | null
     room: TRoom | null,
+    roomId: string | null,
 }
 
 const EMPTY_STATE: State = {
@@ -20,6 +21,7 @@ const EMPTY_STATE: State = {
     hasErrored: false,
     user: null,
     room: null,
+    roomId: null
 }
 
 type HasErrored = {
@@ -36,6 +38,15 @@ type AddMessage = {
 type AddMembers = {
     type: 'ADD_MEMBERS'
     data: Record<string, TRoomMember>
+}
+
+type SetRoomId = {
+    type: 'SET_ROOM_ID'
+    data: string
+}
+
+type RemoveRoomId = {
+    type: 'REMOVE_ROOM_ID'
 }
 
 type DeleteMessage = {
@@ -91,6 +102,8 @@ type Action =
     | AddWinners
     | AddVotes
     | ResetState
+    | SetRoomId
+    | RemoveRoomId
 
 const context = createContext(
     {
@@ -152,6 +165,12 @@ const reducer = (state: State, action: Action): State => {
                 throw new Error('Invalid operation')
             }
             return { ...state, room: { ...state.room, members: { ...state.room.members, ...action.data } } }
+        }
+        case 'SET_ROOM_ID': {
+            return { ...state, roomId: action.data }
+        }
+        case 'REMOVE_ROOM_ID': {
+            return { ...state, roomId: null }
         }
         default: {
             logger(`Swallowing action: ${JSON.stringify(action)}`)

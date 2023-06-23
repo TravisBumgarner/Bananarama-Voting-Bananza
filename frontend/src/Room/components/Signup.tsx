@@ -7,7 +7,7 @@ import { context } from 'context'
 
 import { TDemo, TRoom } from 'types'
 import { logger } from 'utilities'
-import { AddDemoModal } from '../../../modals'
+import AddDemoModal from './AddDemoModal'
 import DemoWrapper from './DemoWrapper'
 
 const DEMO_SUBSCRIPTION = gql`

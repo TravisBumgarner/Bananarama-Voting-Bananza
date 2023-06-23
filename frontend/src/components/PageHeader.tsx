@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import { Heading } from 'sharedComponents'
 import { snippets } from 'theme'
+import { useContext } from 'react'
+import { context } from '../Context'
 
 const Wrapper = styled.div`
     display: flex;
@@ -20,9 +22,11 @@ const Wrapper = styled.div`
 `
 
 const Header = () => {
+    const {dispatch} = useContext(context)
     return (
         <Wrapper>
-            <Link style={{ textDecoration: 'none' }} to="/">
+            {/* This bad. :sad_panda */}
+            <Link style={{ textDecoration: 'none' }} to="/" onClick={() => dispatch({type: "REMOVE_ROOM_ID"})}> {/* eslint-disable-line */}
                 <Heading.H1>
                     Bananarama
                 </Heading.H1>
