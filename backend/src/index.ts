@@ -4,7 +4,6 @@ import { useServer } from 'graphql-ws/lib/use/ws'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import * as Sentry from '@sentry/node'
-import * as Tracing from '@sentry/tracing'
 import { WebSocketServer } from 'ws'
 
 import { logger } from './utilities'
@@ -12,6 +11,23 @@ import errorLookup from './errorLookup'
 import schema from './schemas'
 
 const app = express()
+
+Sentry.init({
+    dsn: 'https://21f36e63b04346e58ab22979c147b1b4@o196886.ingest.sentry.io/4505407029903360',
+    integrations: [
+        // enable HTTP calls tracing
+        new Sentry.Integrations.Http({ tracing: true }),
+        // enable Express.js middleware tracing
+        new Sentry.Integrations.Express({ app }),
+        // Automatically instrument Node.js libraries and frameworks
+        ...Sentry.autoDiscoverNodePerformanceMonitoringIntegrations(),
+    ],
+
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+})
 
 process.on('uncaughtException', (error: any) => logger(error))
 process.on('unhandledRejection', (error: any) => logger(error))
@@ -63,15 +79,6 @@ app.use('/graphql', graphqlHTTP(() => ({
 app.use(Sentry.Handlers.errorHandler())
 app.use((err, req: express.Request, res: express.Response) => {
     res.statusCode = 500
-})
-
-Sentry.init({
-    dsn: 'https://f0f907615c134aff90c1a7d1ea17eb34@o4504279410671616.ingest.sentry.io/4504279411851264',
-    integrations: [
-        new Sentry.Integrations.Http({ tracing: true }),
-        new Tracing.Integrations.Express({ app }),
-    ],
-    tracesSampleRate: 1.0,
 })
 
 const server = app.listen(8080, '0.0.0.0', () => {

@@ -28,7 +28,7 @@ const Header = () => {
             {/* This bad. :sad_panda */}
             <Link style={{ textDecoration: 'none' }} to="/" onClick={() => dispatch({type: "REMOVE_ROOM_ID"})}> {/* eslint-disable-line */}
                 <Heading.H1>
-                    Bananarama
+                    Bananarama Voting!
                 </Heading.H1>
             </Link>
         </Wrapper>

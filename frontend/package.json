@@ -5,8 +5,7 @@
     "license": "UNLICENSED",
     "dependencies": {
         "@apollo/client": "^3.5.8",
-        "@sentry/react": "^6.18.1",
-        "@sentry/tracing": "^6.18.1",
+        "@sentry/react": "^7.54.0",
         "@types/react": "^18.0.26",
         "graphql": "^16.6.0",
         "graphql-ws": "^5.11.2",
@@ -53,6 +52,6 @@
         "precommit": "yarn run test-unit",
         "lint:run": "npx eslint --ext .ts,.tsx ./src/",
         "lint:fix": "npx eslint --ext .ts,.tsx ./src/ --fix",
-        "deploy": "gcloud config set project root-270023 && gcloud builds submit --tag gcr.io/root-270023/bananarama-fe && gcloud run deploy bananarama-fe --image gcr.io/root-270023/bananarama-fe --platform managed --region us-east1"
+        "deploy": "gcloud config set project silly-side-projects && gcloud builds submit --tag gcr.io/silly-side-projects/bananarama-voting-bananza-frontend && gcloud run deploy bananarama-voting-bananza-frontend --image gcr.io/silly-side-projects/bananarama-voting-bananza-frontend --platform managed --region us-east1"
     }
 }
