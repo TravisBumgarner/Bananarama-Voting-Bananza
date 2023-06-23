@@ -11,6 +11,7 @@ import { context, Context } from 'context'
 import { AlertMessage, PageHeader } from './components'
 import Lobby from './Lobby'
 import Room from './Room'
+import MoreFromMe from './MoreFromMe'
 
 const AppWrapper = styled.div`
     min-width: 80vw;
@@ -54,11 +55,14 @@ const App = () => {
     }, [showJoinModal, state.user])
 
     return (
-        <AppWrapper>
-            <PageHeader />
-            <AlertMessage />
-            {state.roomId ? <Room /> : <Lobby />}
-        </AppWrapper>
+        <>
+            <AppWrapper>
+                <PageHeader />
+                <AlertMessage />
+                {state.roomId ? <Room /> : <Lobby />}
+            </AppWrapper>
+            <MoreFromMe />
+        </>
     )
 }
 
