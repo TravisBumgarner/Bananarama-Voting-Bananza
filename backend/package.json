@@ -5,7 +5,7 @@
     "scripts": {
         "start": "export NODE_ENV=local && ts-node-dev ./src/index.ts --ignore-watch node_modules",
         "bundle": "rm -rf ./build && tsc",
-        "deploy": "gcloud config set project root-270023 && gcloud builds submit --tag gcr.io/root-270023/bananarama-be && gcloud run deploy bananarama-be --image gcr.io/root-270023/bananarama-be --platform managed --region us-east1",
+        "deploy": "gcloud config set project silly-side-projects && gcloud builds submit --tag gcr.io/silly-side-projects/bananarama-voting-bananza-backend && gcloud run deploy bananarama-voting-bananza-backend --image gcr.io/silly-side-projects/bananarama-voting-bananza-backend --platform managed --region us-east1",
         "lint:run": "npx eslint --ext .ts ./src/**",
         "lint:fix": "npx eslint --ext .ts ./src/** --fix",
         "test-integration": "jest --config=jest.integration.js",

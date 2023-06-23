@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import { BrowserRouter, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { ApolloClient, HttpLink, InMemoryCache, ApolloProvider, split } from '@apollo/client'
@@ -9,8 +9,6 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { GlobalStyle } from 'theme'
 import { context, Context } from 'context'
 import { AlertMessage, PageHeader, Router } from './components'
-import { JoinModal } from './modals'
-import Modal from './sharedComponents/Modal'
 
 const AppWrapper = styled.div`
     min-width: 80vw;
@@ -40,34 +38,19 @@ const apolloClient = new ApolloClient({
 })
 
 const App = () => {
-    const { state, dispatch } = useContext(context)
+    const { dispatch } = useContext(context)
     const location = useLocation()
-    const [showJoinModal, setShowJoinModal] = useState<boolean>(true)
 
     useEffect(() => {
         dispatch({ type: 'RESET_ROOM_STATE' })
     }, [location])
 
-    useEffect(() => {
-        // retrigger modal if user clicks outside
-        if (!showJoinModal && !state.user) setShowJoinModal(true)
-    }, [showJoinModal, state.user])
-
     return (
-        <>
-            <AppWrapper>
-                <PageHeader />
-                <AlertMessage />
-                <Router />
-            </AppWrapper>
-            <Modal
-                showModal={showJoinModal}
-                closeModal={() => setShowJoinModal(false)}
-                contentLabel="Welcome!"
-            >
-                <JoinModal closeModal={() => setShowJoinModal(false)} />
-            </Modal>
-        </>
+        <AppWrapper>
+            <PageHeader />
+            <AlertMessage />
+            <Router />
+        </AppWrapper>
     )
 }
 

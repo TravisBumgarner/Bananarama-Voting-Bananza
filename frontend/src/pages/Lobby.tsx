@@ -1,16 +1,18 @@
 import { gql, useMutation, } from '@apollo/client'
-import { useContext, useState, useCallback } from 'react'
+import { useContext, useState, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { v4 as uuidv4 } from 'uuid'
 
+import { colors, snippets } from 'theme'
 import { Button, Input } from 'sharedComponents'
 import { context } from 'context'
-import { colors, snippets } from 'theme'
-import { logger } from 'utilities'
+import { getLocalStorage, setLocalStorage, logger } from 'utilities'
 
 const Wrapper = styled.div`
     ${snippets.section};
     padding: 1rem;
+    margin: 1rem 0;
 `
 
 const FabulousOrWrapper = styled.div`
@@ -47,6 +49,20 @@ const Lobby = () => {
     const { dispatch, state: { user } } = useContext(context)
     const [roomId, setRoomId] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [name, setName] = useState<string>(getLocalStorage('user').name || '')
+
+    useEffect(() => {
+        let id: string
+        if (name === getLocalStorage('user').name) {
+            // If the user hasn't changed their name, grab the ID from storage.
+            // Otherwise, generate a new one.
+            id = getLocalStorage('user').id
+        } else {
+            id = uuidv4()
+        }
+        setLocalStorage('user', { name, id })
+        dispatch({ type: 'JOIN', data: { name, id } })
+    }, [name])
 
     const createRoom = useCallback(async () => {
         if (!user) return
@@ -66,7 +82,18 @@ const Lobby = () => {
     }, [roomId])
 
     return (
-        <Wrapper>
+        <>
+            <Wrapper>
+                <div>
+                <Input
+                    label="What is your name?"
+                    name="Name"
+                    value={name}
+                    handleChange={(data) => setName(data)}
+                />
+            </div>
+            </Wrapper>
+            <Wrapper>
             <Button
                 label="Create Room"
                 icon="door_front"
@@ -74,7 +101,7 @@ const Lobby = () => {
                 fullWidth
                 type="button"
                 variation="rotten"
-                disabled={isLoading}
+                disabled={isLoading || name.length === 0}
             />
             <FabulousOrWrapper>
                 <div />
@@ -85,11 +112,11 @@ const Lobby = () => {
                 <Input
                     name="joinroom"
                     value={roomId}
-                    label="Enter an Existing Room Name"
+                    label="Enter a 4 Digit Room Code"
                     handleChange={(value: string) => setRoomId(value)}
                 />
                 <Button
-                    disabled={roomId.length === 0}
+                    disabled={roomId.length === 0 || name.length === 0 || isLoading}
                     label="Join Room"
                     icon="door_open"
                     fullWidth
@@ -99,6 +126,7 @@ const Lobby = () => {
                 />
             </div>
         </Wrapper>
+    </>
     )
 }
 
