@@ -12,8 +12,8 @@ const Input = styled.input`
     color: ${colors.rotten.base};
     width: 100%;
     box-sizing: border-box;
-    text-align: left;
-
+    text-align: center;
+    
     &:focus{
         border-bottom : 4px solid ${colors.rotten.base};
     }
@@ -48,6 +48,8 @@ const LabelWrapper = styled.div<{ showPlaceholder: boolean }>`
         pointer-events: none;
         opacity: 0.5;
         transition: all 0.5s;
+        width: 100%;
+        text-align: center;
 
         ${({ showPlaceholder }) => {
         return showPlaceholder

@@ -18,6 +18,7 @@ const createRoom = {
         ownerName: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve: async (_, args: CreateRoomArgs) => {
+        console.log(inMemoryDatastore.rooms)
         const result = inMemoryDatastore.createRoom({ id: args.ownerId, name: args.ownerName })
         if (result.success) {
             return (result.data)

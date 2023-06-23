@@ -14,6 +14,7 @@ const room = {
         id: { type: new GraphQLNonNull(GraphQLString) }
     },
     resolve: async (_, args: RoomArgs) => {
+        console.log(inMemoryDatastore.rooms)
         const result = inMemoryDatastore.getRoom(args.id)
         if (!result.success) { throw new Error(result.error) }
 

@@ -86,17 +86,14 @@ type TRoomGraphQL = {
     winners: TDemo['id'][]
 }
 
-const Room = () => {
-    const { roomId } = useParams()
+type RoomProps = {
+    roomId: string
+}
+
+const Room = ({ roomId }: RoomProps) => {
     const [isLoading, setIsLoading] = useState(true)
     const { dispatch, state } = useContext(context)
     const navigate = useNavigate()
-
-    useEffect(() => {
-        if (roomId !== roomId?.toLowerCase()) {
-            navigate(`/${roomId?.toLowerCase()}`)
-        }
-    }, [roomId])
 
     const onJoinRoomSuccess = useCallback(({ joinRoom }: { joinRoom: TRoomGraphQL }) => {
         const { votes, members, demos, ...rest } = joinRoom
