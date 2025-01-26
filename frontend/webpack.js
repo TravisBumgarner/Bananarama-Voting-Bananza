@@ -10,9 +10,9 @@ const PLUGIN_VARS = {
         __LOGGING_LEVEL__: "'local'",
     },
     production: {
-        __API_WS_ENDPOINT__: "'wss://bananarama-voting-bananza-backend-ddan5fp6ea-ue.a.run.app/graphql'",
-        __API_HTTP_ENDPOINT__: "'https://bananarama-voting-bananza-backend-ddan5fp6ea-ue.a.run.app/graphql'",
-        __LOGGING_LEVEL__: "'sentry'",
+        __API_WS_ENDPOINT__: "'/ws/graphql'",
+        __API_HTTP_ENDPOINT__: "'/api/graphql'",
+        __LOGGING_LEVEL__: "'sentry'"
     }
 }
 

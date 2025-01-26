@@ -1,14 +1,14 @@
+import * as Sentry from '@sentry/node'
+import bodyParser from 'body-parser'
+import cors from 'cors'
 import express from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import { useServer } from 'graphql-ws/lib/use/ws'
-import cors from 'cors'
-import bodyParser from 'body-parser'
-import * as Sentry from '@sentry/node'
 import { WebSocketServer } from 'ws'
 
-import { logger } from './utilities'
 import errorLookup from './errorLookup'
 import schema from './schemas'
+import { logger } from './utilities'
 
 const app = express()
 
@@ -40,7 +40,6 @@ const CORS_DEV = [
 ]
 
 const COORS_PROD = [
-    'https://bananarama-fe-3qcnyp2pna-ue.a.run.app',
     'bananarama.best'
 ]
 
@@ -63,6 +62,10 @@ app.get('/ok', async (req: express.Request, res: express.Response) => {
     res.send('pong!')
 })
 
+app.get('/api/ok', async (req: express.Request, res: express.Response) => {
+    res.send('api pong!')
+})
+
 app.use('/graphql', graphqlHTTP(() => ({
     schema,
     graphiql: process.env.NODE_ENV !== 'production',
@@ -80,9 +83,9 @@ app.use(Sentry.Handlers.errorHandler())
 app.use((err, req: express.Request, res: express.Response) => {
     res.statusCode = 500
 })
-
-const server = app.listen(8080, '0.0.0.0', () => {
-    console.log('App listening at http://0.0.0.0:8080') //eslint-disable-line
+const PORT = 8000
+const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`App listening at http://0.0.0.0:${PORT}`) //eslint-disable-line
 
     const wsServer = new WebSocketServer({ server, path: '/graphql' })
     useServer({ schema }, wsServer)
