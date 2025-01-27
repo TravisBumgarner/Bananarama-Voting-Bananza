@@ -47,11 +47,11 @@
     },
     "scripts": {
         "start": "export NODE_ENV=local && webpack serve --config=webpack.js",
-        "bundle": "export NODE_ENV=production && rm -rf ./public; mkdir ./public; webpack --config=webpack.js",
+        "bundle": "export NODE_ENV=production && rm -rf ./build; mkdir ./build; webpack --config=webpack.js",
         "test-unit": "jest --config=jest.unit.js",
         "precommit": "yarn run test-unit",
         "lint:run": "npx eslint --ext .ts,.tsx ./src/",
         "lint:fix": "npx eslint --ext .ts,.tsx ./src/ --fix",
-        "deploy": "gcloud config set project silly-side-projects && gcloud builds submit --tag gcr.io/silly-side-projects/bananarama-voting-bananza-frontend && gcloud run deploy bananarama-voting-bananza-frontend --image gcr.io/silly-side-projects/bananarama-voting-bananza-frontend --platform managed --region us-east1"
+        "deploy:nfs": "yarn bundle && ./deploy.sh"
     }
 }

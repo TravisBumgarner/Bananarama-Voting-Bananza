@@ -8,7 +8,7 @@
 // import { createBaseRoom } from './utilities'
 // import schema from '../schemas'
 
-// const wsLink = new GraphQLWsLink(createClient({ url: 'ws://localhost:8080/graphql', webSocketImpl: WebSocket }))
+// const wsLink = new GraphQLWsLink(createClient({ url: 'ws://localhost:8000/graphql', webSocketImpl: WebSocket }))
 
 // const apolloClient = new ApolloClient({
 //     cache: new InMemoryCache(),
@@ -17,7 +17,7 @@
 
 // beforeAll(async () => {
 //     try {
-//         await axios.get('http:/localhost:8080/ok')
+//         await axios.get('http:/localhost:8000/ok')
 //     } catch {
 //         throw new Error('Backend is not running')
 //     }

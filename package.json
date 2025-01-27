@@ -5,8 +5,8 @@
     "main": "index.js",
     "private": true,
     "scripts": {
-        "start": "docker-compose up",
-        "deploy": "concurrently -n frontend,backend -c \"bgMagenta.bold,bgCyan.bold\" \"cd frontend && yarn run deploy\" \"cd backend && yarn run deploy\"",
+        "start": "concurrently -n frontend,backend -c \"bgMagenta.bold,bgCyan.bold\" \"cd frontend && yarn run start\" \"cd backend && yarn run start\"",
+        "deploy:nfs": "concurrently -n frontend,backend -c \"bgMagenta.bold,bgCyan.bold\" \"cd frontend && yarn run deploy:nfs\" \"cd backend && yarn run deploy:nfs\"",
         "bootstrap": "cd backend && yarn && cd ../frontend && yarn && cd .. && yarn",
         "lint:run": "cd backend && yarn run lint:run && cd ../frontend && yarn run lint:run",
         "lint:fix": "cd backend && yarn run lint:fix && cd ../frontend && yarn run lint:fix"
