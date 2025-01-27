@@ -6,7 +6,7 @@ import { createBaseRoom } from './utilities'
 
 beforeAll(async () => {
     try {
-        await axios.get('http:/localhost:8080/ok')
+        await axios.get('http:/localhost:8000/ok')
     } catch {
         throw new Error('Backend is not running')
     }
